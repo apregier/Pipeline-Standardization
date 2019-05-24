@@ -1,0 +1,11 @@
+{
+    "CompareVariants.comparison_list": "gs://??",
+    "CompareVariants.gatk_vcfs": "gs://??",
+    "CompareVariants.gatk_index": "gs://??",
+    "CompareVariants.sv_vcfs": "gs://??",
+    "CompareVariants.easy_bed": "gs://??",
+    "CompareVariants.medium_bed": "gs://??",
+    "CompareVariants.hard_bed": "gs://??",
+
+    "CompareVariants.ref_fasta": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
+}

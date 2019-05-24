@@ -1,0 +1,8 @@
+{
+    "CallVariants.id_list": "gs://??",
+    "CallVariants.exclude_regions": "gs://??",
+
+    "CallVariants.ref_fasta": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta",
+    "CallVariants.ref_fasta_index": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai",
+    "CallVariants.ref_dict": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
+}
