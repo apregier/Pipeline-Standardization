@@ -1,0 +1,16 @@
+{
+  "workflow_failure_mode": "ContinueWhilePossible",
+  "final_workflow_outputs_dir": "gs://functional_equivalence_test/final_output/",
+  "jes_gcs_root": "gs://functional_equivalence_test/cromwell-executions",
+  "read_from_cache": true,
+  "monitoring_script": "gs://wustl-ccdg-cromwell/mem_monitor.sh",
+  "default_runtime_attributes": {
+    "zones": "us-central1-a us-central1-b us-central1-c us-central1-f"
+  },
+  "google_labels": {
+    "user": "aregier",
+    "pipeline": "call-variants",
+    "project": "novoseq-functional-equivalence"
+  }
+}
+
