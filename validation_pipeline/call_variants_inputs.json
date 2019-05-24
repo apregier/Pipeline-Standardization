@@ -1,6 +1,6 @@
 {
-    "CallVariants.id_list": "gs://??",
-    "CallVariants.exclude_regions": "gs://??",
+    "CallVariants.id_list": "gs://functional_equivalence_test/wdl_inputs/call_variants_id_list.txt",
+    "CallVariants.exclude_regions": "gs://human-b38/GRCh38DH/annotations/exclude.cnvnator_100bp.GRCh38.20170403.bed",
 
     "CallVariants.ref_fasta": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta",
     "CallVariants.ref_fasta_index": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai",
