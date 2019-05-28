@@ -15,6 +15,7 @@ workflow CallVariants {
                 ref_fasta=ref_fasta,
                 ref_fasta_index=ref_fasta_index,
                 ref_fasta_dict=ref_fasta_dict,
+		output_vcf_filename="gatk.vcf.gz"
         }
         call ExtractReads {
             input:
@@ -34,17 +35,47 @@ workflow CallVariants {
             input:
                 input_vcf=Lumpy.output_vcf,
                 cram_file=sample[1],
+		cram_index=sample[2],
                 sample_name=sample[0]
         }
     }
-    output {
-        File sv_vcfs = ${write_map({SVTyper.sample_name_out: SVTyper.output_vcf})}
-        File gatk_vcfs = ${write_map({GATK.sample_name: GATK.variants})}
-        File gatk_index = ${write_map({GATK.sample_name: GATK.variants_index})}
-        #Map[String, File] sv_vcfs = {SVTyper.sample_name_out: SVTyper.output_vcf}
-        #Map[String, File] gatk_vcfs = {GATK.sample_name: GATK.variants}
-        #Map[String, File] gatk_index = {GATK.sample_name: GATK.variants_index}
+    call GatherFiles as GatherSVs {
+        input:
+		pairs=SVTyper.outPair,
+		mapName="SVTyperMap"
     }
+    call GatherFiles as GatherGATK {
+    	input:
+		pairs=GATK.outPair,
+		mapName="GATKMap"
+    }
+    call GatherFiles as GatherGATKIndex {
+    	input:
+		pairs=GATK.outPairIndex,
+		mapName="GATKIndexMap"
+    }
+    output {
+        File sv_vcfs = GatherSVs.mapFile
+        File gatk_vcfs = GatherGATK.mapFile
+        File gatk_index = GatherGATKIndex.mapFile
+    }
+}
+
+task GatherFiles {
+	Array[Pair[String, File]] pairs
+	String mapName
+	command {
+        	cat ${write_lines(pairs)} > ${mapName}
+        }
+        runtime {
+            docker: "broadinstitute/gatk3:3.5-0"
+            memory: "4 GB"
+            cpu: "1"
+            preemptible: 5
+        }
+	output {
+		File mapFile="${mapName}"
+	}
 }
 
 task GATK {
@@ -71,11 +102,12 @@ task GATK {
         memory: "16 GB"
         cpu: "2"
         disks: "local-disk " + 50 + " HDD"
-        preemptible: 5
     }
     output {
         File variants = "${output_vcf_filename}"
         File variants_index = "${output_vcf_filename}.tbi"
+	Pair[String, File] outPair = ("${sample_name}", variants)
+	Pair[String, File] outPairIndex = ("${sample_name}", variants_index)
     }
 }
 
@@ -146,12 +178,13 @@ task Lumpy {
 task SVTyper {
     File input_vcf
     File cram_file
+    File cram_index
     String sample_name
 
     String json_output_file_name="output.json"
     String vcf_output_file_name="output.vcf"
     command {
-        zcat ${input_vcf} | svtyper \
+        cat ${input_vcf} | svtyper \
             -B ${cram_file} \
             -l ${json_output_file_name} \
             > ${vcf_output_file_name}
@@ -166,6 +199,6 @@ task SVTyper {
     output {
         File output_vcf="${vcf_output_file_name}"
         File output_json="${json_output_file_name}"
-        String sample_name_out=sample_name
+	Pair[String, File] outPair=(sample_name, output_vcf)
     }
 }

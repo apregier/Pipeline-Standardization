@@ -4,5 +4,5 @@
 
     "CallVariants.ref_fasta": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta",
     "CallVariants.ref_fasta_index": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta.fai",
-    "CallVariants.ref_dict": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
+    "CallVariants.ref_fasta_dict": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.dict",
 }
