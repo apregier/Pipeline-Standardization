@@ -19,7 +19,7 @@ workflow CallVariants {
                 ref_fasta=ref_fasta,
                 ref_fasta_index=ref_fasta_index,
                 ref_fasta_dict=ref_fasta_dict,
-		output_vcf_filename="gatk.vcf.gz"
+                output_vcf_filename="gatk.vcf.gz"
         }
         call ExtractReads {
             input:
