@@ -1,9 +1,13 @@
+version 1.0
+
 workflow CallVariants {
-    File id_list
-    File exclude_regions
-    File ref_fasta
-    File ref_fasta_index
-    File ref_fasta_dict
+    input {
+        File id_list
+        File exclude_regions
+        File ref_fasta
+        File ref_fasta_index
+        File ref_fasta_dict
+    }
 
     Array[Array[File]] inputSamples = read_tsv(id_list)
     scatter (sample in inputSamples) {
@@ -35,57 +39,73 @@ workflow CallVariants {
             input:
                 input_vcf=Lumpy.output_vcf,
                 cram_file=sample[1],
-		cram_index=sample[2],
+                cram_index=sample[2],
                 sample_name=sample[0]
         }
     }
     call GatherFiles as GatherSVs {
         input:
-		pairs=SVTyper.outPair,
-		mapName="SVTyperMap"
+        files = SVTyper.output_vcf,
+        samples = SVTyper.sample,
+        mapName="SVTyperMap"
     }
     call GatherFiles as GatherGATK {
-    	input:
-		pairs=GATK.outPair,
-		mapName="GATKMap"
+        input:
+        files=GATK.variants,
+        samples = GATK.sample,
+        mapName="GATKMap"
     }
     call GatherFiles as GatherGATKIndex {
-    	input:
-		pairs=GATK.outPairIndex,
-		mapName="GATKIndexMap"
+        input:
+        files = GATK.variants_index,
+        samples = GATK.sample,
+        mapName="GATKIndexMap"
     }
     output {
-        File sv_vcfs = GatherSVs.mapFile
-        File gatk_vcfs = GatherGATK.mapFile
-        File gatk_index = GatherGATKIndex.mapFile
+        File sv_vcf_map = GatherSVs.mapFile
+        Array[File] sv_vcfs = SVTyper.output_vcf
+        Array[File] gatk_vcfs = GATK.variants
+        Array[File] gatk_index = GATK.variants_index
+        File gatk_vcf_map = GatherGATK.mapFile
+        File gatk_index_map = GatherGATKIndex.mapFile
     }
 }
 
 task GatherFiles {
-	Array[Pair[String, File]] pairs
-	String mapName
-	command {
-        	cat ${write_lines(pairs)} > ${mapName}
+    input {
+        Array[File] files
+        Array[String] samples
+        String mapName
+    }
+    parameter_meta {
+        files: {
+            localization_optional: true
         }
+    }
+    command <<<
+            paste <(cat ~{write_lines(samples)}) <(cat ~{write_lines(files)}) > ~{mapName}
+        >>>
         runtime {
             docker: "broadinstitute/gatk3:3.5-0"
             memory: "4 GB"
             cpu: "1"
             preemptible: 5
         }
-	output {
-		File mapFile="${mapName}"
-	}
+    output {
+        File mapFile="${mapName}"
+    }
 }
 
 task GATK {
-    String sample_name
-    File cram_file
-    File cram_index
-    File ref_fasta
-    File ref_fasta_index
-    File ref_fasta_dict
-    String output_vcf_filename
+    input {
+        String sample_name
+        File cram_file
+        File cram_index
+        File ref_fasta
+        File ref_fasta_index
+        File ref_fasta_dict
+        String output_vcf_filename
+    }
     command {
         java -Xmx10g -Xms10g -jar /usr/GenomeAnalysisTK.jar \
             -T HaplotypeCaller \
@@ -106,17 +126,17 @@ task GATK {
     output {
         File variants = "${output_vcf_filename}"
         File variants_index = "${output_vcf_filename}.tbi"
-	Pair[String, File] outPair = ("${sample_name}", variants)
-	Pair[String, File] outPairIndex = ("${sample_name}", variants_index)
+        String sample = "${sample_name}"
     }
 }
 
 task ExtractReads {
-    File input_file
-    File input_index
-    String splitter_file_name="splitters.bam"
-    String discordant_file_name="discordants.bam"
-
+    input {
+        File input_file
+        File input_index
+        String splitter_file_name="splitters.bam"
+        String discordant_file_name="discordants.bam"
+    }
     command {
         extract-sv-reads --input-threads 4 \
             -e \
@@ -143,13 +163,15 @@ task ExtractReads {
 }
 
 task Lumpy {
-    File splitter_file
-    File discordants_file
-    File splitter_index
-    File discordants_index
-    File cram_file
-    File exclude_regions
-    String output_vcf_name="lumpy.vcf"
+    input {
+        File splitter_file
+        File discordants_file
+        File splitter_index
+        File discordants_index
+        File cram_file
+        File exclude_regions
+        String output_vcf_name="lumpy.vcf"
+    }
 
     command {
         lumpyexpress \
@@ -176,10 +198,12 @@ task Lumpy {
 }
 
 task SVTyper {
-    File input_vcf
-    File cram_file
-    File cram_index
-    String sample_name
+    input {
+        File input_vcf
+        File cram_file
+        File cram_index
+        String sample_name
+    }
 
     String json_output_file_name="output.json"
     String vcf_output_file_name="output.vcf"
