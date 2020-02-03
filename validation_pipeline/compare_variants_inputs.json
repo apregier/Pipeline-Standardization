@@ -1,11 +1,10 @@
 {
-    "CompareVariants.comparison_list": "gs://??",
-    "CompareVariants.gatk_vcfs": "gs://??",
-    "CompareVariants.gatk_index": "gs://??",
-    "CompareVariants.sv_vcfs": "gs://??",
-    "CompareVariants.easy_bed": "gs://??",
-    "CompareVariants.medium_bed": "gs://??",
-    "CompareVariants.hard_bed": "gs://??",
-
-    "CompareVariants.ref_fasta": "gs://broad-references/hg38/v0/Homo_sapiens_assembly38.fasta"
+    "CompareVariants.comparison_list": "gs://functional_equivalence_test/wdl_inputs/comparison_list.txt",
+    "CompareVariants.gatk_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/954baf9f-0e81-4fd8-9e35-0ca8fe3b1025/call-GatherGATK/GATKMap",
+    "CompareVariants.gatk_index_file": "gs://functional_equivalence_test/final_output/CallVariants/954baf9f-0e81-4fd8-9e35-0ca8fe3b1025/call-GatherGATKIndex/GATKIndexMap",
+    "CompareVariants.sv_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/b3d03251-e10f-4845-903b-1027077349d0/call-GatherSVs/SVTyperMap",
+    "CompareVariants.easy_bed": "gs://human-b38/GRCh38DH/annotations/easy.bed",
+    "CompareVariants.medium_bed": "gs://human-b38/GRCh38DH/annotations/medium.bed",
+    "CompareVariants.hard_bed": "gs://human-b38/GRCh38DH/annotations/hard.bed",
+    "CompareVariants.ref_fasta": "gs://human-b38/GRCh38DH/all_sequences.fa",
 }
