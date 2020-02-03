@@ -1,15 +1,16 @@
+version 1.0
+
 workflow CompareVariants {
-    File comparison_list
-    #Map[String, File] gatk_vcfs
-    #Map[String, File] gatk_index
-    #Map[String, File] sv_vcfs
-    File gatk_vcfs_file
-    File gatk_index_file
-    File sv_vcfs_file
-    File easy_bed
-    File medium_bed
-    File hard_bed
-    File ref_fasta
+    input {
+        File comparison_list
+        File gatk_vcfs_file
+        File gatk_index_file
+        File sv_vcfs_file
+        File easy_bed
+        File medium_bed
+        File hard_bed
+        File ref_fasta
+    }
 
     Array[Array[String]] comparisons = read_tsv(comparison_list)
     Map gatk_vcfs = read_map(gatk_vcfs_file)
@@ -43,15 +44,17 @@ workflow CompareVariants {
 }
 
 task compare_GATK {
-    File ref_fasta
-    File truth_vcf
-    File vcf
-    File truth_vcf_index
-    File vcf_index
-    File easy_bed
-    File medium_bed
-    File hard_bed
-    String output_prefix
+    input {
+        File ref_fasta
+        File truth_vcf
+        File vcf
+        File truth_vcf_index
+        File vcf_index
+        File easy_bed
+        File medium_bed
+        File hard_bed
+        String output_prefix
+    }
     command {
         echo "GiaB\t${easy_bed}" > stratification.tsv && \
         echo "difficult\t${hard_bed}" >> stratification.tsv && \
@@ -81,15 +84,17 @@ task compare_GATK {
 }
 
 task compare_Lumpy {
-    File vcf1
-    File vcf2
-    String sample1
-    String sample2
+    input {
+        File vcf1
+        File vcf2
+        String sample1
+        String sample2
 
-    String bedpe1_name="${sample1}.bedpe"
-    String bedpe2_name="${sample2}.bedpe"
-    String output_name="${sample1}-${sample2}.counts.txt"
-    String python="/opt/ccdg/python-2.7.12/bin/python"
+        String bedpe1_name="${sample1}.bedpe"
+        String bedpe2_name="${sample2}.bedpe"
+        String output_name="${sample1}-${sample2}.counts.txt"
+        String python="/opt/ccdg/python-2.7.12/bin/python"
+    }
 
     command {
         echo "Sample1	Sample2	Class	Count" > ${output_name} && \
