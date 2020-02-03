@@ -223,6 +223,6 @@ task SVTyper {
     output {
         File output_vcf="${vcf_output_file_name}"
         File output_json="${json_output_file_name}"
-	Pair[String, File] outPair=(sample_name, output_vcf)
+    String sample="${sample_name}"
     }
 }
