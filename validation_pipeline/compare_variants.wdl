@@ -13,9 +13,9 @@ workflow CompareVariants {
     }
 
     Array[Array[String]] comparisons = read_tsv(comparison_list)
-    Map gatk_vcfs = read_map(gatk_vcfs_file)
-    Map gatk_index = read_map(gatk_index_file)
-    Map sv_vcfs = read_map(sv_vcfs_file)
+    Map[String, File] gatk_vcfs = read_map(gatk_vcfs_file)
+    Map[String, File] gatk_index = read_map(gatk_index_file)
+    Map[String, File] sv_vcfs = read_map(sv_vcfs_file)
 
     scatter (comparison in comparisons) {
 
