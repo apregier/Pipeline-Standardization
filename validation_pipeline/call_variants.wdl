@@ -7,6 +7,7 @@ workflow CallVariants {
         File ref_fasta
         File ref_fasta_index
         File ref_fasta_dict
+        File ref_cache
     }
 
     Array[Array[File]] inputSamples = read_tsv(id_list)
@@ -40,7 +41,8 @@ workflow CallVariants {
                 input_vcf=Lumpy.output_vcf,
                 cram_file=sample[1],
                 cram_index=sample[2],
-                sample_name=sample[0]
+                sample_name=sample[0],
+                ref_cache=ref_cache
         }
     }
     call GatherFiles as GatherSVs {
@@ -203,13 +205,20 @@ task SVTyper {
         File cram_file
         File cram_index
         String sample_name
+        File ref_cache
     }
 
     String json_output_file_name="output.json"
     String vcf_output_file_name="output.vcf"
     command {
+        ln -s ${cram_file} basename.cram
+        ln -s ${cram_index} basename.cram.crai
+
+        tar -xzf ${ref_cache}
+        export REF_PATH=./cache/%2s/%2s/%s
+        export REF_CACHE=./cache/%2s/%2s/%s
         cat ${input_vcf} | svtyper \
-            -B ${cram_file} \
+            -B basename.cram \
             -l ${json_output_file_name} \
             > ${vcf_output_file_name}
     }

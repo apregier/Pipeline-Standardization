@@ -5,4 +5,5 @@
     "CallVariants.ref_fasta": "gs://human-b38/GRCh38DH/all_sequences.fa",
     "CallVariants.ref_fasta_index": "gs://human-b38/GRCh38DH/all_sequences.fa.fai",
     "CallVariants.ref_fasta_dict": "gs://human-b38/GRCh38DH/all_sequences.dict",
+    "CallVariants.ref_cache": "gs://human-b38/GRCh38DH/cache.tar.gz",
 }
