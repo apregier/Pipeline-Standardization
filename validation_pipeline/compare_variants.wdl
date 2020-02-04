@@ -22,19 +22,19 @@ workflow CompareVariants {
 
         String sample1=comparison[0]
         String sample2=comparison[1]
-        call compare_GATK {
-            input:
-                ref_fasta=ref_fasta,
-                ref_fasta_index=ref_fasta_index,
-                truth_vcf=gatk_vcfs[sample1],
-                vcf=gatk_vcfs[sample2],
-                truth_vcf_index=gatk_index[sample1],
-                vcf_index=gatk_index[sample2],
-                easy_bed=easy_bed,
-                medium_bed=medium_bed,
-                hard_bed=hard_bed,
-                output_prefix="${sample1}.${sample2}"
-        }
+#        call compare_GATK {
+#            input:
+#                ref_fasta=ref_fasta,
+#                ref_fasta_index=ref_fasta_index,
+#                truth_vcf=gatk_vcfs[sample1],
+#                vcf=gatk_vcfs[sample2],
+#                truth_vcf_index=gatk_index[sample1],
+#                vcf_index=gatk_index[sample2],
+#                easy_bed=easy_bed,
+#                medium_bed=medium_bed,
+#                hard_bed=hard_bed,
+#                output_prefix="${sample1}.${sample2}"
+#        }
         call compare_Lumpy {
             input:
                 vcf1=sv_vcfs[sample1],
@@ -98,7 +98,7 @@ task compare_Lumpy {
         String bedpe2_name="${sample2}.bedpe"
         String output_name="${sample1}-${sample2}.counts.txt"
         String python="/opt/hall-lab/python-2.7.15/bin/python"
-        String svtools="/opt/hall-lab/python-2.7.15/bin/svtools
+        String svtools="/opt/hall-lab/python-2.7.15/bin/svtools"
         String bedtools="/opt/hall-lab/bedtools"
         String compareScript="/opt/hall-lab/Pipeline-Standardization/scripts/compare_single_sample_based_on_strand.py"
     }
