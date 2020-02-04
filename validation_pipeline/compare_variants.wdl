@@ -108,8 +108,8 @@ task compare_Lumpy {
         echo "Sample1	Sample2	Class	Count" > ${output_name} && \
         ${svtools} vcftobedpe -i ${vcf1} -o ${bedpe1_name} && \
         ${svtools} vcftobedpe -i ${vcf2} -o ${bedpe2_name} && \
-        cat ${bedpe1_name} | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe1_name}.padded.bedpe && \
-        cat ${bedpe2_name} | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe2_name}.padded.bedpe && \
+        cat ${bedpe1_name} | grep -v "^#" | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe1_name}.padded.bedpe && \
+        cat ${bedpe2_name} | grep -v "^#" | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe2_name}.padded.bedpe && \
         ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
         ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
         ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name}
