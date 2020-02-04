@@ -100,17 +100,18 @@ task compare_Lumpy {
     }
 
     command {
+        set -exo pipefail
         echo "Sample1	Sample2	Class	Count" > ${output_name} && \
         /opt/ccdg/python-2.7.12/bin/svtools vcftobedpe -i ${vcf1} -o ${bedpe1_name} && \
         /opt/ccdg/python-2.7.12/bin/svtools vcftobedpe -i ${vcf2} -o ${bedpe2_name} && \
         cat ${bedpe1_name} | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe1_name}.padded.bedpe && \
         cat ${bedpe2_name} | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe2_name}.padded.bedpe && \
-        bedtools pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | sort -u | ${python} compare_single_sample_based_on_strand.py -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
-        bedtools pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} compare_single_sample_based_on_strand.py -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
-        bedtools pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} compare_single_sample_based_on_strand.py -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name}
+        /opt/hall-lab/bedtools pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | sort -u | ${python} /opt/hall-lab/Pipeline-Standardization/scripts/compare_single_sample_based_on_strand.py -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
+        /opt/hall-lab/bedtools pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} /opt/hall-lab/Pipeline-Standardization/scripts/compare_single_sample_based_on_strand.py -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
+        /opt/hall-lab/bedtools pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} /opt/hall-lab/Pipeline-Standardization/scripts/compare_single_sample_based_on_strand.py -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name}
     }
-    runtime { #TODO need docker that includes bedtools and python script
-        docker: "halllab/svtools@sha256:f2f3f9c788beb613bc26c858f897694cd6eaab450880c370bf0ef81d85bf8d45"
+    runtime {
+        docker: "apregier/compare_sv@sha256:592093805386f4a962947773819d1000fa027877fa2c3b5ddd1780c28ba9ebae"
         preemptible: 5
     }
     output {
