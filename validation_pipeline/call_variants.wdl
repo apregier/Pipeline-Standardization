@@ -85,6 +85,7 @@ task GatherFiles {
         }
     }
     command <<<
+            set -exo pipefail
             paste <(cat ~{write_lines(samples)}) <(cat ~{write_lines(files)}) > ~{mapName}
         >>>
         runtime {
@@ -109,6 +110,7 @@ task GATK {
         String output_vcf_filename
     }
     command {
+        set -exo pipefail
         java -Xmx10g -Xms10g -jar /usr/GenomeAnalysisTK.jar \
             -T HaplotypeCaller \
             -R ${ref_fasta} \
@@ -140,6 +142,7 @@ task ExtractReads {
         String discordant_file_name="discordants.bam"
     }
     command {
+        set -exo pipefail
         extract-sv-reads --input-threads 4 \
             -e \
             -r \
@@ -176,6 +179,7 @@ task Lumpy {
     }
 
     command {
+        set -exo pipefail
         lumpyexpress \
             -P \
             -T lumpy.temp \
@@ -211,6 +215,7 @@ task SVTyper {
     String json_output_file_name="output.json"
     String vcf_output_file_name="output.vcf"
     command {
+        set -exo pipefail
         ln -s ${cram_file} basename.cram
         ln -s ${cram_index} basename.cram.crai
 
