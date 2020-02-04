@@ -10,6 +10,7 @@ workflow CompareVariants {
         File medium_bed
         File hard_bed
         File ref_fasta
+        File ref_fasta_index
     }
 
     Array[Array[String]] comparisons = read_tsv(comparison_list)
@@ -24,6 +25,7 @@ workflow CompareVariants {
         call compare_GATK {
             input:
                 ref_fasta=ref_fasta,
+                ref_fasta_index=ref_fasta_index,
                 truth_vcf=gatk_vcfs[sample1],
                 vcf=gatk_vcfs[sample2],
                 truth_vcf_index=gatk_index[sample1],
@@ -46,6 +48,7 @@ workflow CompareVariants {
 task compare_GATK {
     input {
         File ref_fasta
+        File ref_fasta_index
         File truth_vcf
         File vcf
         File truth_vcf_index

@@ -7,4 +7,5 @@
     "CompareVariants.medium_bed": "gs://human-b38/GRCh38DH/annotations/medium.bed",
     "CompareVariants.hard_bed": "gs://human-b38/GRCh38DH/annotations/hard.bed",
     "CompareVariants.ref_fasta": "gs://human-b38/GRCh38DH/all_sequences.fa",
+    "CompareVariants.ref_fasta_index": "gs://human-b38/GRCh38DH/all_sequences.fa.fai",
 }
