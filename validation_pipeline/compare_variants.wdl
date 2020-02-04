@@ -59,9 +59,10 @@ task compare_GATK {
         String output_prefix
     }
     command {
-        echo "GiaB\t${easy_bed}" > stratification.tsv && \
-        echo "difficult\t${hard_bed}" >> stratification.tsv && \
-        echo "rest\t${medium_bed}" >> stratification.tsv && \
+        set -exo pipefail
+        echo "easy	${easy_bed}" > stratification.tsv && \
+        echo "hard	${hard_bed}" >> stratification.tsv && \
+        echo "medium	${medium_bed}" >> stratification.tsv && \
         HGREF=${ref_fasta} \
         /opt/hap.py/bin/hap.py \
         ${truth_vcf} \
