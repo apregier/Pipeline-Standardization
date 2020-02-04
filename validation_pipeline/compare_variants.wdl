@@ -70,7 +70,7 @@ task compare_GATK {
         --preprocess-truth
     }
     runtime {
-        docker: pkrusche/hap.py
+        docker: "pkrusche/hap.py"
         cpu: "4"
         memory: "16 GB"
         disks: "local-disk " + 100 + " HDD"
