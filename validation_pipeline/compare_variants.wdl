@@ -22,19 +22,19 @@ workflow CompareVariants {
 
         String sample1=comparison[0]
         String sample2=comparison[1]
-#        call compare_GATK {
-#            input:
-#                ref_fasta=ref_fasta,
-#                ref_fasta_index=ref_fasta_index,
-#                truth_vcf=gatk_vcfs[sample1],
-#                vcf=gatk_vcfs[sample2],
-#                truth_vcf_index=gatk_index[sample1],
-#                vcf_index=gatk_index[sample2],
-#                easy_bed=easy_bed,
-#                medium_bed=medium_bed,
-#                hard_bed=hard_bed,
-#                output_prefix="${sample1}.${sample2}"
-#        }
+        call compare_GATK {
+            input:
+                ref_fasta=ref_fasta,
+                ref_fasta_index=ref_fasta_index,
+                truth_vcf=gatk_vcfs[sample1],
+                vcf=gatk_vcfs[sample2],
+                truth_vcf_index=gatk_index[sample1],
+                vcf_index=gatk_index[sample2],
+                easy_bed=easy_bed,
+                medium_bed=medium_bed,
+                hard_bed=hard_bed,
+                output_prefix="${sample1}.${sample2}"
+        }
         call compare_Lumpy {
             input:
                 vcf1=sv_vcfs[sample1],
