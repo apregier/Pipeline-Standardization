@@ -127,6 +127,7 @@ task compare_Lumpy {
     runtime {
         docker: "apregier/compare_sv@sha256:446c8a855d5b8f4091ec5034ad40ef9cda41c85324dd75d055233e68ea240cbd"
         preemptible: 5
+        memory: "4 GB"
     }
     output {
         File output_counts="${output_name}"
