@@ -40,7 +40,9 @@ workflow CompareVariants {
                 vcf1=sv_vcfs[sample1],
                 vcf2=sv_vcfs[sample2],
                 sample1=sample1,
-                sample2=sample2
+                sample2=sample2,
+                medium=medium_bed,
+                hard=hard_bed
         }
     }
 }
@@ -93,6 +95,8 @@ task compare_Lumpy {
         File vcf2
         String sample1
         String sample2
+        File medium
+        File hard
 
         String bedpe1_name="${sample1}.bedpe"
         String bedpe2_name="${sample2}.bedpe"
@@ -110,9 +114,15 @@ task compare_Lumpy {
         ${svtools} vcftobedpe -i ${vcf2} -o ${bedpe2_name} && \
         cat ${bedpe1_name} | grep -v "^#" | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe1_name}.padded.bedpe && \
         cat ${bedpe2_name} | grep -v "^#" | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe2_name}.padded.bedpe && \
-        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
-        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name} && \
-        ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	/" >> ${output_name}
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type either | rev | cut -f 4- | rev | sort -u | ${python} ${compareScript} -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	hard	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b $medium -type either | rev | cut -f 4- | rev | sort -u | ${python} ${compareScript} -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	medium	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type both -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type neither | sort -u | rev | cut -f 4- | rev | sort -u | ${python} ${compareScript} -l 0 | grep -v 'only' | sed "s/^/${sample1}	${sample2}	easy	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type either | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	hard	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type either | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	medium	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -a ${bedpe1_name}.padded.bedpe -b ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type neither | sort -u | ${python} ${compareScript} -l 0 | grep 'only' | sed "s/^/${sample1}	${sample2}	easy	/" >> ${output_name} && \
+        ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type either | sort -u | ${python} ${compareScript} -l 1 | grep 'only' | sed "s/^/${sample1}	${sample2}	hard	/" >> ${output_name}
+        ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type either | sort -u | ${python} ${compareScript} -l 1 | grep 'only' | sed "s/^/${sample1}	${sample2}	medium	/" >> ${output_name}
+        ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type neither | sort -u | ${python} ${compareScript} -l 1 | grep 'only' | sed "s/^/${sample1}	${sample2}	easy	/" >> ${output_name}
     }
     runtime {
         docker: "apregier/compare_sv@sha256:446c8a855d5b8f4091ec5034ad40ef9cda41c85324dd75d055233e68ea240cbd"
