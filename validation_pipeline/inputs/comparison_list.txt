@@ -1,0 +1,15 @@
+NA12878.bi.1.d.WashU	NA12878.hgsc.1.d.WashU	data_replicate
+NA12878.bi.1.d.WashU	NA12878.nygc.1.d.WashU	data_replicate
+NA12878.bi.1.d.WashU	NA12878.nygc.2.d.WashU	data_replicate
+NA12878.bi.1.d.WashU	NA12878.wu.1.d.WashU	data_replicate
+NA12878.hgsc.1.d.WashU	NA12878.nygc.1.d.WashU	data_replicate
+NA12878.hgsc.1.d.WashU	NA12878.nygc.2.d.WashU	data_replicate
+NA12878.hgsc.1.d.WashU	NA12878.wu.1.d.WashU	data_replicate
+NA12878.nygc.1.d.WashU	NA12878.nygc.2.d.WashU	data_replicate
+NA12878.nygc.1.d.WashU	NA12878.wu.1.d.WashU	data_replicate
+NA12878.nygc.2.d.WashU	NA12878.wu.1.d.WashU	data_replicate
+NA12878.bi.1.d.NYGC	NA12878.bi.1.d.WashU	inter_center
+NA12878.hgsc.1.d.NYGC	NA12878.hgsc.1.d.WashU	inter_center
+NA12878.nygc.1.d.NYGC	NA12878.nygc.1.d.WashU	inter_center
+NA12878.nygc.2.d.NYGC	NA12878.nygc.2.d.WashU	inter_center
+NA12878.wu.1.d.NYGC	NA12878.wu.1.d.WashU	inter_center
