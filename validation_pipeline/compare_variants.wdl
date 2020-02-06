@@ -118,7 +118,7 @@ task compare_Lumpy {
 
     command {
         set -exo pipefail
-        echo "Sample1	Sample2	Class	Region	Count" > ${output_name}
+        echo "Sample1	Sample2	Subset	Class	Count" > ${output_name}
         ${svtools} vcftobedpe -i ${vcf1} -o ${bedpe1_name}
         ${svtools} vcftobedpe -i ${vcf2} -o ${bedpe2_name}
         cat ${bedpe1_name} | grep -v "^#" | perl -ape '$F[1] -= 1; $F[2]+=1; $F[4] -= 1; $F[5] += 1; $_ = join("\t", @F)."\n"' > ${bedpe1_name}.padded.bedpe
