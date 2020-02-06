@@ -54,6 +54,13 @@ workflow CompareVariants {
                 hard=hard_bed
         }
     }
+
+    call plot {
+        input:
+            sv_counts=compare_Lumpy.output_counts,
+            happy_extended=modify_Happy.modified_happy,
+            comparison_list=comparison_list
+    }
 }
 
 task compare_GATK {
@@ -163,3 +170,27 @@ task modify_Happy {
     }
 }
 
+task plot {
+    input {
+        Array[File] sv_counts
+        Array[File] happy_extended
+        File comparison_list
+        File happy_fof = write_lines(happy_extended)
+        File sv_fof = write_lines(sv_counts)
+        
+    }
+
+    command <<<
+        set -exo pipefail
+        RSCRIPT=/usr/local/bin/Rscript
+        ${RSCRIPT} plot_comparisons.R ~{comparison_list} ~{happy_fof} ~{sv_fof} comparisons
+    >>>
+    runtime {
+        docker: "rocker/tidyverse@sha256:0d900477d9ca90ff297db9f444a5f8ea641f70463524d5804a46d89dc141093a"
+        preemptible: 5
+        memory: "4 GB"
+    }
+    output {
+        File output_plot="comparisons.png"
+    }
+}
