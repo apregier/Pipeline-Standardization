@@ -35,6 +35,15 @@ workflow CompareVariants {
                 hard_bed=hard_bed,
                 output_prefix="${sample1}.${sample2}"
         }
+
+        call modify_Happy {
+            input:
+                happy_file=compare_GATK.output_extended
+                sample1=sample1
+                sample2=sample2
+                out_file="${sample1}.${sample2}.happy_modified.extended.csv"
+        }
+
         call compare_Lumpy {
             input:
                 vcf1=sv_vcfs[sample1],
@@ -133,3 +142,24 @@ task compare_Lumpy {
         File output_counts="${output_name}"
     }
 }
+
+task modify_Happy {
+    input {
+        File happy_file
+        String sample1
+        String sample2
+        String out_file
+    }
+    command <<<
+        cat ~{happy_file} | sed 's/^Type/Sample1,Sample2,Type/' | sed 's/^INDEL/~{sample1},~{sample2},INDEL/' | sed 's/^SNP/~{sample1},~{sample2},SNP/' > ~{out_file}
+    >>>
+    runtime {
+        docker: "debian:stretch-slim"
+        preemptible: 5
+        memory: "1 GB"
+    }
+    output {
+        File modified_happy="${out_file}"
+    }
+}
+
