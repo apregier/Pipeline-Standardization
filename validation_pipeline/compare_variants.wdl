@@ -191,10 +191,10 @@ task plot {
     command <<<
         set -exo pipefail
         RSCRIPT=/usr/local/bin/Rscript
-        ${RSCRIPT} plot_comparisons.R ~{comparison_list} ~{happy_fof} ~{sv_fof} comparisons
+        ${RSCRIPT} /opt/hall-lab/plot_comparisons.R ~{comparison_list} ~{happy_fof} ~{sv_fof} comparisons
     >>>
     runtime {
-        docker: "rocker/tidyverse@sha256:0d900477d9ca90ff297db9f444a5f8ea641f70463524d5804a46d89dc141093a"
+        docker: "apregier/plot_comparisons@sha256:5a68c8c85eb713fb7f5922b05fe11570c61c01aa84b877ef263ce71d6f8399b4"
         preemptible: 5
         memory: "4 GB"
     }
