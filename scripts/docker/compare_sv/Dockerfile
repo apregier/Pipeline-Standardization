@@ -33,17 +33,16 @@ RUN find /opt/hall-lab/python-2.7.15/ -depth \( -name '*.pyo' -o -name '*.pyc' -
 #RUN find /opt/hall-lab/python-2.7.15/lib/python2.7/site-packages/ -name '*.so' -print -exec sh -c 'file "{}" | grep -q "not stripped" && strip -s "{}"' \;
 RUN curl -kL https://github.com/arq5x/bedtools2/releases/download/v2.28.0/bedtools > /opt/hall-lab/bedtools
 RUN chmod a+x /opt/hall-lab/bedtools
-RUN git clone https://github.com/CCDG/Pipeline-Standardization.git /opt/hall-lab/Pipeline-Standardization
 
 FROM debian:stretch-slim
 LABEL maintainer "Dave Larson <delarson@wustl.edu>"
 
 COPY --from=svtools-0.5.1-build /opt/hall-lab/python-2.7.15 /opt/hall-lab/python-2.7.15
 COPY --from=svtools-0.5.1-build /opt/hall-lab/bedtools /opt/hall-lab/bedtools
-COPY --from=svtools-0.5.1-build /opt/hall-lab/Pipeline-Standardization /opt/hall-lab/Pipeline-Standardization
 COPY --from=halllab/samtools-1.9-build:v1 /build/deb-build/opt/hall-lab/samtools-1.9 /opt/hall-lab/samtools-1.9
 COPY --from=halllab/cnvnator-0.3.3-build:v1 /opt/hall-lab/cnvnator-0.3.3/deb-build/opt/hall-lab/cnvnator-0.3.3 /opt/hall-lab/cnvnator-0.3.3
 COPY --from=halllab/htslib-1.9-build:v1 /build/deb-build/opt/hall-lab/htslib-1.9 /opt/hall-lab/htslib-1.9
+ADD compare_single_sample_based_on_strand.py /opt/hall-lab
 
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends \

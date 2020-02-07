@@ -128,7 +128,7 @@ task compare_Lumpy {
         String python="/opt/hall-lab/python-2.7.15/bin/python"
         String svtools="/opt/hall-lab/python-2.7.15/bin/svtools"
         String bedtools="/opt/hall-lab/bedtools"
-        String compareScript="/opt/hall-lab/Pipeline-Standardization/scripts/compare_single_sample_based_on_strand.py"
+        String compareScript="/opt/hall-lab/compare_single_sample_based_on_strand.py"
     }
 
     command {
@@ -149,7 +149,7 @@ task compare_Lumpy {
         ${bedtools} pairtopair -is -b ${bedpe1_name}.padded.bedpe -a ${bedpe2_name}.padded.bedpe -type notboth -slop 50 | ${bedtools} pairtobed -a - -b ${hard} -type neither | ${bedtools} pairtobed -a - -b ${medium} -type neither | sort -u | ${python} ${compareScript} -l 1 | grep 'only' | sed "s/^/${sample1}	${sample2}	easy	/" >> ${output_name}
     }
     runtime {
-        docker: "apregier/compare_sv@sha256:446c8a855d5b8f4091ec5034ad40ef9cda41c85324dd75d055233e68ea240cbd"
+        docker: "apregier/compare_sv@sha256:1258932b60c73a6078aadd9a7a369129479fed805afbf43a9e6fe8259334165a"
         preemptible: 5
         memory: "4 GB"
     }
