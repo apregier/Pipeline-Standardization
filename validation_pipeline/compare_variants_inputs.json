@@ -1,8 +1,8 @@
 {
     "CompareVariants.comparison_list": "gs://functional_equivalence_test/wdl_inputs/comparison_list.txt",
-    "CompareVariants.gatk_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/954baf9f-0e81-4fd8-9e35-0ca8fe3b1025/call-GatherGATK/GATKMap",
-    "CompareVariants.gatk_index_file": "gs://functional_equivalence_test/final_output/CallVariants/954baf9f-0e81-4fd8-9e35-0ca8fe3b1025/call-GatherGATKIndex/GATKIndexMap",
-    "CompareVariants.sv_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/a2d7d272-766c-4ae9-8e92-8b30d07a115e/call-GatherSVs/SVTyperMap",
+    "CompareVariants.gatk_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/7f044113-1c70-4f62-ada6-4640d15ff15a/call-GatherGATK/GATKMap",
+    "CompareVariants.gatk_index_file": "gs://functional_equivalence_test/final_output/CallVariants/7f044113-1c70-4f62-ada6-4640d15ff15a/call-GatherGATKIndex/GATKIndexMap",
+    "CompareVariants.sv_vcfs_file": "gs://functional_equivalence_test/final_output/CallVariants/7f044113-1c70-4f62-ada6-4640d15ff15a/call-GatherSVs/SVTyperMap",
     "CompareVariants.easy_bed": "gs://human-b38/GRCh38DH/annotations/easy.bed",
     "CompareVariants.medium_bed": "gs://human-b38/GRCh38DH/annotations/medium.bed",
     "CompareVariants.hard_bed": "gs://human-b38/GRCh38DH/annotations/hard.bed",
