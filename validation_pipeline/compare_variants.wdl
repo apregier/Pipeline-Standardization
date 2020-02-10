@@ -38,9 +38,9 @@ workflow CompareVariants {
 
         call modify_Happy {
             input:
-                happy_file=compare_GATK.output_extended
-                sample1=sample1
-                sample2=sample2
+                happy_file=compare_GATK.output_extended,
+                sample1=sample1,
+                sample2=sample2,
                 out_file="${sample1}.${sample2}.happy_modified.extended.csv"
         }
 
