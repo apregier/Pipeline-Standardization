@@ -65,7 +65,7 @@ workflow CompareVariants {
     output {
         File output_plot=plot.output_plot
         Array[File] sv_counts=compare_Lumpy.output_counts
-        Array[File] happy_counts= modify_Happy.modified.happy
+        Array[File] happy_counts= modify_Happy.modified_happy
         Array[File] happy_vcf=compare_GATK.output_vcf
         Array[File] happy_summary=compare_GATK.output_summary
     }
