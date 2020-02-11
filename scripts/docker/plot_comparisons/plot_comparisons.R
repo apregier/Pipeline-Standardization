@@ -3,6 +3,8 @@ library(plyr)
 library(ggplot2)
 library(dplyr)
 
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 args <- commandArgs(trailingOnly = TRUE)
 comparison_list <- args[1]
 happy_fof <- args[2]
@@ -47,11 +49,13 @@ all$Type <- revalue(all$Type, c("SNP"="SNV", "INDEL"="indel"))
 all$Type <- factor(all$Type, levels=c("SNV", "indel", "SV"))
 all$Subset <- factor(all$Subset, levels=c("easy", "medium", "hard", "TS_boundary", "*"))
 
-ggplot(all %>% filter(Subtype=="*" & Filter=="PASS"), aes(x=ComparisonType, y=Rate)) +
+ggplot(all %>% filter(Subtype=="*" & Filter=="PASS"), aes(x=ComparisonType, y=Rate, fill=ComparisonType)) +
     geom_boxplot() +
     facet_grid(Type~Subset, scales="free") +
     theme_bw() +
     theme(panel.grid.major = element_blank(), panel.grid.minor=element_blank(), panel.background = element_blank()) +
+    theme(axis.text.x=element_text(angle=45, hjust=1)) +
+    scale_fill_manual(values=cbPalette) +
     ylab("Variant discordance rate") +
     xlab("Comparison type")
 ggsave(filename=paste(output_prefix, "png", sep="."))

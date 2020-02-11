@@ -202,7 +202,7 @@ task plot {
         ${RSCRIPT} /opt/hall-lab/plot_comparisons.R ~{comparison_list} ~{happy_fof}.local_map.txt ~{sv_fof}.local_map.txt comparisons
     >>>
     runtime {
-        docker: "apregier/plot_comparisons@sha256:5a68c8c85eb713fb7f5922b05fe11570c61c01aa84b877ef263ce71d6f8399b4"
+        docker: "apregier/plot_comparisons@sha256:ab44ca152c1c3d65b5bf2342aa96206e478b66c8b0b8df2799cdd600c6ffef1e"
         preemptible: 5
         memory: "4 GB"
     }
