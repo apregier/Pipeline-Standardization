@@ -190,8 +190,16 @@ task plot {
 
     command <<<
         set -exo pipefail
+
+        cat ~{happy_fof} \
+            | sed 's/^gs:\/\//\.\//g' \
+            > ~{happy_fof}.local_map.txt
+        cat ~{sv_fof} \
+            | sed 's/^gs:\/\//\.\//g' \
+            > ~{sv_fof}.local_map.txt
+        sleep 1
         RSCRIPT=/usr/local/bin/Rscript
-        ${RSCRIPT} /opt/hall-lab/plot_comparisons.R ~{comparison_list} ~{happy_fof} ~{sv_fof} comparisons
+        ${RSCRIPT} /opt/hall-lab/plot_comparisons.R ~{comparison_list} ~{happy_fof}.local_map.txt ~{sv_fof}.local_map.txt comparisons
     >>>
     runtime {
         docker: "apregier/plot_comparisons@sha256:5a68c8c85eb713fb7f5922b05fe11570c61c01aa84b877ef263ce71d6f8399b4"
